@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>第六课 · Практика · Где это? 这是在哪儿？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#1a1410;
+    --paper:#f4ecd8;
+    --paper-2:#ede2c4;
+    --cream:#faf5e6;
+    --red:#a02418;
+    --red-dark:#7a1610;
+    --red-soft:#c8453a;
+    --gold:#b88c3c;
+    --gold-light:#d9a847;
+    --jade:#3d6e5a;
+    --jade-light:#5a8f78;
+    --slate:#4a3f33;
+    --slate-2:#6b5b48;
+    --line:rgba(26,20,16,.18);
+    --line-strong:rgba(26,20,16,.4);
+    --shadow-soft: 0 1px 2px rgba(26,20,16,.06), 0 4px 14px rgba(26,20,16,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Cormorant Garamond', Georgia, serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 700px at 10% -10%, rgba(184,140,60,.18), transparent 60%),
+      radial-gradient(900px 600px at 110% 10%, rgba(160,36,24,.10), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(26,20,16,.022) 0 1px, transparent 1px 4px),
+      var(--paper);
+    line-height:1.55;
+    min-height:100vh;
+  }
+  .zh{font-family:'Noto Serif SC', serif; font-weight:500}
+  .zh-strong{font-family:'Noto Serif SC', serif; font-weight:700}
+  .ui{font-family:'Inter', system-ui, sans-serif}
+
+  /* ===== Layout & Grammar Boxes ===== */
+  .wrap{max-width:1180px; margin:0 auto; padding:48px 28px 120px}
+  .grammar-box{
+    background: rgba(184,140,60,.08); border-left: 4px solid var(--red);
+    padding: 24px; margin-bottom: 28px; font-family: 'Inter', sans-serif; font-size: 14.5px;
+    color: var(--slate); border-radius: 0 8px 8px 0;
+  }
+  .grammar-box h4{
+    margin: 0 0 14px 0; color: var(--red-dark); font-family: 'Noto Serif SC', serif; font-size: 22px;
+  }
+  .grammar-box p{ margin: 0 0 12px 0; line-height: 1.6; }
+  .grammar-box ul{ margin: 0 0 12px 0; padding-left: 20px; }
+  .grammar-box li{ margin-bottom: 6px; }
+  .grammar-box p:last-child, .grammar-box ul:last-child{ margin: 0; }
+  .grammar-box .formula{
+    display: block; background: var(--cream); border: 1px dashed var(--red-soft);
+    padding: 10px 14px; font-family: 'Noto Serif SC', serif; font-weight: 700; color: var(--ink);
+    margin: 10px 0; border-radius: 4px; font-size: 16px;
+  }
+  .grammar-box .zh-ex{ font-family: 'Noto Serif SC', serif; font-weight: 500; color: var(--ink); font-size: 16px; }
+
+  /* ===== Hero ===== */
+  .hero{
+    position:relative; border:1px solid var(--line-strong);
+    background: linear-gradient(180deg, rgba(250,245,230,.7), rgba(250,245,230,.4)), radial-gradient(circle at 80% 30%, rgba(160,36,24,.12), transparent 50%);
+    padding:54px 56px 48px; overflow:hidden;
+  }
+  .hero::before{ content:""; position:absolute; inset:8px; border:1px solid var(--line); pointer-events:none; }
+  .kicker{
+    display:inline-block; font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
+    letter-spacing:.32em; text-transform:uppercase; color:var(--red);
+    padding:6px 12px; border:1px solid var(--red); background:rgba(160,36,24,.06);
+  }
+  h1.hero-title{
+    font-family:'Noto Serif SC',serif; font-weight:900;
+    font-size:clamp(40px, 6vw, 72px); line-height:1; margin:22px 0 8px; color:var(--ink);
+    text-shadow:1px 1px 0 rgba(184,140,60,.25);
+  }
+  .hero-sub{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(22px, 2.4vw, 30px); color:var(--slate); margin:0 0 18px;
+  }
+
+  /* ===== Progress bar ===== */
+  .progress-wrap{
+    position:sticky; top:0; z-index:30; background:rgba(244,236,216,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line); padding:10px 0; margin:0 -28px 0;
+  }
+  .progress-inner{
+    max-width:1180px; margin:0 auto; padding:0 28px; display:flex; align-items:center; gap:14px;
+  }
+  .pbar{flex:1; height:6px; background:rgba(26,20,16,.1); border-radius:3px; overflow:hidden}
+  .pbar > div{height:100%; background:linear-gradient(90deg, var(--red), var(--gold)); width:0%; transition:width .4s ease}
+  .pstats{font-family:'Inter',sans-serif; font-size:12px; color:var(--slate); letter-spacing:.04em}
+  .pstats b{color:var(--red); font-weight:700; font-size:14px}
+
+  /* ===== Section ===== */
+  section.task{
+    margin-top:56px; background:var(--cream); border:1px solid var(--line-strong);
+    box-shadow:var(--shadow-soft); overflow:hidden;
+  }
+  .task-head{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:24px;
+    padding:28px 32px 18px; border-bottom:1px dashed var(--line);
+    background:linear-gradient(180deg, rgba(184,140,60,.07), transparent);
+  }
+  .task-head .num{
+    font-family:'Noto Serif SC',serif; font-weight:900; font-size:64px; line-height:.85; color:var(--red);
+    text-shadow:2px 2px 0 rgba(184,140,60,.25);
+  }
+  .task-head .num small{font-size:14px; font-family:'Inter',sans-serif; font-weight:600; letter-spacing:.2em; color:var(--slate-2); display:block; margin-bottom:6px}
+  .task-head .ti h2{ font-family:'Cormorant Garamond',serif; font-weight:600; font-size:30px; margin:0 0 4px; color:var(--ink); }
+  .task-head .ti .zh-title{font-family:'Noto Serif SC',serif; font-weight:500; font-size:20px; color:var(--slate); margin-bottom:6px; display:block}
+  .task-head .ti p{margin:0; font-style:italic; color:var(--slate-2); max-width:640px}
+  .task-body{padding:30px 32px 34px}
+
+  /* ===== Buttons ===== */
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:13px;
+    padding:10px 18px; border:1px solid var(--ink); background:var(--ink); color:var(--cream);
+    cursor:pointer; transition:all .15s ease; letter-spacing:.03em;
+  }
+  .btn:hover{background:var(--red); border-color:var(--red); transform:translateY(-1px)}
+  .btn-ghost{background:transparent; color:var(--ink)}
+  .btn-ghost:hover{background:var(--ink); color:var(--cream)}
+  .btn-small{padding:6px 12px; font-size:11px}
+
+  /* ===== Pinyin & Shared UI ===== */
+  .py{font-family:'Inter',sans-serif; font-size:13.5px; color:var(--slate-2); font-style:italic; display:block; margin-top:2px}
+  .feedback{ margin-top:10px; font-family:'Inter',sans-serif; font-size:12.5px; min-height:18px; color:var(--slate-2); }
+  .feedback.ok{color:var(--jade)}
+  .feedback.no{color:var(--red)}
+
+  /* ===== TASK 0: WARMUP BUILDER ===== */
+  .warmup-card{ background:var(--paper); border:1px solid var(--line); padding:20px; text-align:center; margin-bottom:16px;}
+  .warmup-slot{
+    display:inline-block; min-width:80px; padding:6px 12px; border-bottom:3px dashed var(--red); 
+    margin:0 10px; font-family:'Noto Serif SC',serif; font-size:22px; font-weight:bold; color:var(--red);
+  }
+  .warmup-slot.filled{ border-bottom-style:solid; background:rgba(160,36,24,.05); }
+  .warmup-options{ display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:20px; }
+  .w-opt{
+    padding:10px 20px; background:var(--cream); border:1px solid var(--line-strong);
+    font-family:'Noto Serif SC',serif; font-size:18px; cursor:pointer; transition:all 0.2s;
+  }
+  .w-opt:hover{ background:var(--ink); color:var(--cream); }
+  .w-opt.used{ opacity:0.3; pointer-events:none; }
+
+  /* ===== TASK 1: EMOJI ===== */
+  .emoji-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(330px, 1fr)); gap:18px; }
+  .emoji-card{ background:var(--paper); border:1px solid var(--line-strong); padding:18px 18px 16px; position:relative; transition: border-color .2s; }
+  .emoji-card.solved{border-color:var(--jade); background:#f0f5ef}
+  .emoji-card.wrong{border-color:var(--red); background:#faedeb}
+  .scene{ font-size:54px; text-align:center; padding:14px 0 6px; line-height:1; letter-spacing:.04em; background: linear-gradient(180deg, transparent 60%, rgba(184,140,60,.1) 60%, rgba(184,140,60,.1) 62%, transparent 62%); }
+  .scene-desc{ font-family:'Inter',sans-serif; font-size:12px; color:var(--slate-2); text-align:center; margin:4px 0 12px; font-style:italic; }
+  .sentence-build{ background:var(--cream); border:1px dashed var(--line); padding:12px 14px; margin:10px 0 12px; font-family:'Noto Serif SC',serif; font-size:20px; line-height:1.7; text-align:center; min-height:46px; }
+  .sentence-build .slot{ display:inline-block; min-width:62px; padding:2px 8px; border-bottom:2px solid var(--red); color:var(--red); font-weight:700; background:rgba(160,36,24,.06); }
+  .sentence-build .slot.empty{color:rgba(160,36,24,.35); border-bottom-style:dashed}
+  .opts{display:flex; gap:8px; flex-wrap:wrap; justify-content:center}
+  .opt{ font-family:'Noto Serif SC',serif; font-weight:500; padding:8px 14px; background:var(--cream); border:1px solid var(--line-strong); cursor:pointer; font-size:17px; transition:all .12s ease; user-select:none; }
+  .opt:hover{background:var(--ink); color:var(--cream); }
+  .opt.picked{background:var(--red); color:var(--cream); border-color:var(--red)}
+  .opt.correct-hl{background:var(--jade); color:white; border-color:var(--jade)}
+  .opt.wrong-hl{background:var(--red); color:white; border-color:var(--red); opacity:.55}
+  .speak{ position:absolute; bottom:10px; right:12px; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--cream); border:none; cursor:pointer; display:none; align-items:center; justify-content:center; font-size:13px; }
+  .emoji-card.solved .speak{display:flex}
+  .speak:hover{background:var(--red)}
+
+  /* ===== TASK 2: 在 vs 有 ===== */
+  .zaiyou-list{display:grid; grid-template-columns:1fr; gap:12px}
+  .zaiyou-item{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:14px 18px; background:var(--paper); border:1px solid var(--line); }
+  .zaiyou-item .sent{font-family:'Noto Serif SC',serif; font-size:19px; flex:1; min-width:260px}
+  .zaiyou-item .gap{ display:inline-block; min-width:46px; padding:2px 6px; margin:0 4px; border-bottom:2px dashed var(--red); color:var(--red); font-weight:700; text-align:center; }
+  .zaiyou-item.solved .gap{border-bottom-style:solid; background:rgba(61,110,90,.1); color:var(--jade)}
+  .zaiyou-item.wrong .gap{background:rgba(160,36,24,.1)}
+  .zaiyou-btns{display:flex; gap:6px}
+  .zb{ font-family:'Noto Serif SC',serif; font-weight:700; font-size:17px; padding:8px 16px; border:1px solid var(--line-strong); background:var(--cream); cursor:pointer; }
+  .zb:hover{background:var(--ink); color:var(--cream)}
+  .zb.picked{background:var(--red); color:var(--cream); border-color:var(--red)}
+
+  /* ===== TASK 3 & 4 (Fill, TF, Transform) ===== */
+  .fill-list{display:grid; gap:14px; grid-template-columns:1fr 1fr}
+  @media (max-width:760px){.fill-list{grid-template-columns:1fr}}
+  .fill-item{ background:var(--paper); border:1px solid var(--line); padding:14px 16px; }
+  .fill-item .sentence{font-family:'Noto Serif SC',serif; font-size:19px; margin-bottom:4px}
+  .fill-item input{ font-family:'Noto Serif SC',serif; font-size:18px; width:100%; border:none; border-bottom:2px solid var(--line-strong); background:transparent; padding:6px 4px; outline:none; color:var(--red); font-weight:700; }
+  .fill-item input:focus{border-bottom-color:var(--red)}
+  .fill-item.ok input{border-bottom-color:var(--jade); color:var(--jade)}
+  .fill-item.no input{border-bottom-color:var(--red); background:rgba(160,36,24,.05)}
+
+  .tf-text{ font-family:'Noto Serif SC',serif; font-size:20px; line-height:1.8; background:var(--paper); padding:24px; border:1px solid var(--line); margin-bottom:20px;}
+  .tf-grid{ display:grid; gap:12px; }
+  .tf-card{ display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:14px 18px; border:1px solid var(--line-strong); gap:16px; flex-wrap:wrap;}
+  .tf-card .q{ font-family:'Noto Serif SC',serif; font-size:18px; flex:1; min-width:200px; }
+  .tf-actions{ display:flex; gap:8px; }
+  .tf-btn{ padding:6px 12px; border:1px solid var(--line-strong); background:white; cursor:pointer; font-family:'Inter',sans-serif; font-weight:600; }
+  .tf-btn:hover{ background:var(--ink); color:white; }
+  .tf-btn.picked-true{ background:var(--jade); color:white; border-color:var(--jade); }
+  .tf-btn.picked-false{ background:var(--red); color:white; border-color:var(--red); }
+  .tf-card.solved{ background:#f0f5ef; border-color:var(--jade); }
+
+  .transform-list{display:grid; gap:18px}
+  .tr-item{background:var(--paper); border:1px solid var(--line); padding:16px 18px}
+  .tr-prompt{ font-family:'Noto Serif SC',serif; font-size:19px; margin-bottom:4px; display:flex; align-items:center; gap:12px; }
+  .tr-prompt .arrow{color:var(--red); font-weight:700; font-family:'Inter',sans-serif; font-size:14px}
+  .tr-opts { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .tr-opt { text-align: left; padding: 10px 14px; background: var(--cream); border: 1px solid var(--line-strong); cursor: pointer; font-family: 'Noto Serif SC', serif; font-size: 18px; transition: all .15s; }
+  .tr-opt:hover { background: var(--ink); color: var(--cream); }
+  .tr-opt.correct-hl { background: var(--jade); color: white; border-color: var(--jade); }
+  .tr-opt.wrong-hl { background: var(--red); color: white; border-color: var(--red); opacity:.8 }
+
+  /* ===== TASK 5: 离 distance ===== */
+  .li-grid{display:grid; gap:16px}
+  .li-card{ background:var(--paper); border:1px solid var(--line); padding:18px 20px; display:grid; gap:8px; }
+  .li-prompt{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; color:var(--slate)}
+  .li-sentence{font-family:'Noto Serif SC',serif; font-size:20px; line-height:1.6}
+  .li-sentence .blank{ display:inline-block; min-width:78px; padding:2px 10px; border-bottom:2px solid var(--red); color:var(--red); font-weight:700; text-align:center; background:rgba(160,36,24,.06); cursor:pointer; user-select:none; transition:all .12s; }
+  .li-sentence .blank.filled{background:transparent; border-bottom-color:var(--ink); color:var(--ink); cursor:default}
+  .li-bank{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+  .chip{ font-family:'Noto Serif SC',serif; font-size:16px; font-weight:500; padding:7px 14px; background:var(--cream); border:1px solid var(--line-strong); cursor:pointer; transition:all .12s; }
+  .chip:hover{background:var(--ink); color:var(--cream)}
+  .chip.used{opacity:.3; pointer-events:none; text-decoration:line-through}
+  .li-card.solved{border-color:var(--jade); background:#f0f5ef}
+  .li-card.solved .blank{background:rgba(61,110,90,.1); border-bottom-color:var(--jade); color:var(--jade)}
+
+  /* ===== TASK 6: Vocab matching ===== */
+  .match-frame{ display:grid; grid-template-columns:1fr 1fr; gap:24px; background:var(--paper); border:1px solid var(--line); padding:22px; }
+  @media (max-width:680px){.match-frame{grid-template-columns:1fr}}
+  .match-col{display:grid; gap:8px}
+  .m-card{ padding:12px 14px; background:var(--cream); border:1px solid var(--line-strong); cursor:pointer; font-family:'Noto Serif SC',serif; font-size:18px; transition:all .15s; user-select:none; }
+  .m-card.ru{font-family:'Cormorant Garamond',serif; font-size:17px}
+  .m-card.selected{background:var(--red); color:var(--cream); border-color:var(--red)}
+  .m-card.matched{background:rgba(61,110,90,.12); border-color:var(--jade); color:var(--jade); cursor:default; pointer-events:none; text-decoration:none}
+
+  /* ===== TASK 7: Route builder ===== */
+  .route-scene{ background:var(--paper); border:1px solid var(--line); padding:24px; display:grid; gap:16px; }
+  .route-build{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; background:var(--cream); border:1px dashed var(--line); padding:14px; min-height:60px; font-family:'Noto Serif SC',serif; font-size:20px; }
+  .route-bank{display:flex; flex-wrap:wrap; gap:8px}
+  .word{ padding:8px 14px; background:var(--ink); color:var(--cream); cursor:pointer; font-family:'Noto Serif SC',serif; font-size:17px; user-select:none; transition:all .12s; }
+  .word.used{opacity:.25; pointer-events:none; background:var(--slate-2)}
+  .word-in-build{ padding:6px 12px; background:var(--red); color:var(--cream); cursor:pointer; }
+
+  /* ===== Utility/Helpers ===== */
+  hr.fancy{ border:none; height:24px; margin:50px auto 0; background: radial-gradient(circle at 50% 50%, var(--red) 0 4px, transparent 5px); background-size:24px 24px; background-position:center; background-repeat:no-repeat; }
+  .reset-row{display:flex; justify-content:flex-end; margin-top:14px}
+  .final{ margin-top:60px; padding:40px 30px; background: radial-gradient(circle at 50% 30%, rgba(184,140,60,.2), transparent 70%), var(--paper); border:2px solid var(--red); text-align:center; position:relative; }
+  .final h2{ font-family:'Noto Serif SC',serif; font-weight:900; font-size:54px; color:var(--red); margin:0 0 4px; }
+  .final .pct{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; color:var(--slate); margin-bottom:18px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-seal">第六<small>LESSON SIX</small></div>
+    <span class="kicker">Урок 6 · Практика</span>
+    <h1 class="hero-title">这是在哪儿？</h1>
+    <p class="hero-sub">Где это? — Углублённый тренажёр локативов, маршрутов и расстояний</p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <div class="pstats ui">ВЫПОЛНЕНО · <b id="doneCount">0</b> / <span id="totalCount">0</span></div>
+      <div class="pbar"><div id="pbar"></div></div>
+      <div class="pstats ui">ПРАВИЛЬНО · <b id="rightCount">0</b></div>
+    </div>
+  </div>
+
+  <section class="task" id="t0">
+    <div class="task-head">
+      <div class="num">00<small>Разминка</small></div>
+      <div class="ti">
+        <span class="zh-title">热身 · 构造公式</span>
+        <h2>Как сказать «На столе»?</h2>
+        <p>В русском мы используем предлоги (<i><b>на</b> столе</i>, <i><b>в</b> шкафу</i>). В китайском — <b>послелоги (локативы)</b>. Они ставятся ПОСЛЕ предмета.</p>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="grammar-box">
+        <h4>📌 Правило: Существительное + Локатив</h4>
+        <p>Чтобы сказать «в комнате», нужно сказать «комната + внутри» <span class="formula">Существительное + (的) + 方位词 (Локатив)</span></p>
+        <ul>
+          <li><b>Односложные локативы:</b> (上, 下, 里). Частица <b>的</b> обычно <b>опускается</b> (桌子上, 书包里).</li>
+          <li><b>Двусложные локативы:</b> (上面, 前边, 旁边). Частицу <b>的</b> можно ставить, но в речи её часто глотают (学校的旁边 ➔ 学校旁边).</li>
+          <li><b>Исключение:</b> Если существительное само по себе обозначает место (например, 医院 больница, 中国 Китай), локатив "внутри" (里) использовать <b>не нужно</b>. Мы говорим <span class="zh-ex">他在中国</span> (Он в Китае), а не <span class="zh-ex">他在中国里</span>.</li>
+        </ul>
+      </div>
+      <div id="warmupList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;"></div>
+    </div>
+  </section>
+
+  <hr class="fancy" />
+
+  <section class="task" id="t1">
+    <div class="task-head">
+      <div class="num">01<small>Локативы</small></div>
+      <div class="ti">
+        <span class="zh-title">练习一 · 看图选方位词</span>
+        <h2>Где этот предмет?</h2>
+        <p>Посмотри на эмодзи и закончи предложение правильным локативом.</p>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="grammar-box">
+        <h4>📌 Глагол 在 (zài) — находиться</h4>
+        <p>Когда мы говорим о том, где находится <b>конкретный, известный нам предмет</b>, мы используем конструкцию:<br>
+        <span class="formula">Предмет (кто/что) + 在 + Место (Сущ + Локатив)</span></p>
+        <p><i>Пример: Мой кот (известный) находится под кроватью — <span class="zh-ex">我的猫在床下。</span> (Wǒ de māo zài chuáng xià.)</i></p>
+      </div>
+      <div class="emoji-grid" id="emojiGrid"></div>
+      <div class="reset-row"><button class="btn btn-ghost btn-small" onclick="resetEmoji()">Сбросить все ↺</button></div>
+    </div>
+  </section>
+
+  <hr class="fancy" />
+
+  <section class="task" id="t2">
+    <div class="task-head">
+      <div class="num">02<small>В / Y</small></div>
+      <div class="ti">
+        <span class="zh-title">练习二 · 在 还是 有？</span>
+        <h2><span class="zh">在</span> или <span class="zh">有</span>?</h2>
+        <p>Это главная боль всех изучающих. Выбери правильный глагол, опираясь на смысл предложения.</p>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="grammar-box">
+        <h4>📌 Разница между 在 и 有</h4>
+        <p><b>在 (находиться):</b> Описывает, ГДЕ находится конкретный предмет. (Отвечает на вопрос "где эта вещь?")<br>
+        <span class="formula">Известный Предмет + 在 + Место</span> <br>
+        <i>Книга (эта самая) лежит на столе: <span class="zh-ex">书在桌子上。</span></i></p>
+        <hr style="border:none; border-top:1px dashed var(--line); margin:10px 0;">
+        <p><b>有 (имеется, есть):</b> Описывает, ЧТО находится в этом месте. (Отвечает на вопрос "что там есть?")<br>
+        <span class="formula">Место + 有 + Неизвестный Предмет</span> <br>
+        <i>На столе есть (какая-то) книга: <span class="zh-ex">桌子上有一本书。</span></i></p>
+      </div>
+      <div class="zaiyou-list" id="zaiyouList"></div>
+    </div>
+  </section>
+
+  <hr class="fancy" />
+
+  <section class="task" id="t3">
+    <div class="task-head">
+      <div class="num">03<small>Текст</small></div>
+      <div class="ti">
+        <span class="zh-title">练习三 · 填空</span>
+        <h2>Впиши локатив</h2>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="fill-list" id="fillList"></div>
+      <div class="reset-row"><button class="btn btn-small" onclick="checkFill()">Проверить ✓</button></div>
+    </div>
+  </section>
+
+  <hr class="fancy" />
+
+  <section class="task" id="t-read">
+    <div class="task-head">
+      <div class="num">04<small>Чтение</small></div>
+      <div class="ti">
+        <span class="zh-title">阅读理解 · 判断对错</span>
+        <h2>Правда или ложь? (对/错)</h2>
+        <p>Прочитай текст про комнату и отметь, верны ли утверждения ниже.</p>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="tf-text">
+        <span class="zh" style="display:block; margin-bottom:8px">这是我的房间。房间不大，但是很漂亮。门旁边有一个大衣柜，衣柜里有很多衣服。房间中间有一张床。床的右边有一张书桌。书桌上有一台电脑和几本书。书桌下面有一只小狗，它在睡觉。</span>
+        <span class="py" style="font-size:15px; color:var(--slate-2)">Zhè shì wǒ de fángjiān. Fángjiān bù dà, dànshì hěn piàoliang. Mén pángbiān yǒu yí ge dà yīguì, yīguì lǐ yǒu hěn duō yīfu. Fángjiān zhōngjiān yǒu yì zhāng chuáng. Chuáng de yòubiān yǒu yì zhāng shūzhuō. Shūzhuō shàng yǒu yì tái diànnǎo hé jǐ běn shū. Shūzhuō xiàmiàn yǒu yì zhī xiǎo gǒu, tā zài shuìjiào.</span>
+      </div>
+      <div class="tf-grid" id="tfGrid"></div>
+    </div>
+  </section>
+
+  <hr class="fancy" />
+
+  <section class="task" id="t4">
+    <div class="task-head">
+      <div class="num">05<small>Трансформация</small></div>
+      <div class="ti">
+        <span class="zh-title">练习四 · 改写句子</span>
+        <h2><span class="zh">有</span> ⇄ <span class="zh">在</span></h2>
+        <p>Выбери правильный вариант трансформации предложения. Внимательно следи за порядком слов!</p>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="transform-list" id="transformList"></div>
+    </div>
+  </section>
+
+  <hr class="fancy" />
+
+  <section class="task" id="t5">
+    <div class="task-head">
+      <div class="num">06<small>离 + расстояние</small></div>
+      <div class="ti">
+        <span class="zh-title">练习五 · 远还是近？</span>
+        <h2>Сколько до X? (离)</h2>
+        <p>Расставь слова по местам для описания расстояния.</p>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="grammar-box">
+        <h4>📌 Предлог 离 (lí) — отстоять от</h4>
+        <p>Используется для указания расстояния между двумя точками (физического или временного). Отвечает на вопросы «далеко ли?» и «сколько до?».<br>
+        <span class="formula">Место A + 离 + Место B + [很远 / 很近 / Расстояние]</span></p>
+        <ul>
+          <li><b>Далеко/близко:</b> <span class="zh-ex">学校离我家很远。</span> (Школа от моего дома очень далеко).</li>
+          <li><b>Конкретное расстояние:</b> Для указания цифр часто добавляют глагол 有 (есть, имеется): <span class="zh-ex">机场离酒店有五公里。</span> (Аэропорт находится в 5 км от отеля).</li>
+          <li><b>Как задать вопрос?</b>
+            <br>– "Далеко ли?": <span class="zh-ex">A 离 B 远不远？</span> или <span class="zh-ex">A 离 B 远吗？</span>
+            <br>– "Как далеко? (Сколько метров/км)": <span class="zh-ex">A 离 B 有多远？</span>
+          </li>
+        </ul>
+        <hr style="border:none; border-top:1px dashed var(--line); margin:10px 0;">
+        <h4>📏 Единицы измерения и полезные слова:</h4>
+        <ul>
+          <li><b>Единицы:</b> 米 (mǐ) — метр; 公里 (gōnglǐ) или 千米 (qiānmǐ) — километр; 分钟 (fēnzhōng) — минута.</li>
+          <li><b>Примерно / почти:</b> 大概 (dàgài) или 差不多 (chàbuduō). <br><i>Пример:</i> <span class="zh-ex">地铁站离这儿大概有500米。</span> (Метро примерно в 500 метрах отсюда).</li>
+          <li><b>Совсем не / нисколько не:</b> 一点儿也不 (yìdiǎnr yě bù). <br><i>Пример:</i> <span class="zh-ex">邮局离我家一点儿也不远。</span> (Почта нисколько не далеко от моего дома).</li>
+        </ul>
+      </div>
+      <div class="li-grid" id="liGrid"></div>
+    </div>
+  </section>
+
+  <hr class="fancy" />
+
+  <section class="task" id="t6">
+    <div class="task-head">
+      <div class="num">07<small>Лексика</small></div>
+      <div class="ti">
+        <span class="zh-title">练习六 · 配对</span>
+        <h2>Сопоставь слово с переводом</h2>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="match-frame">
+        <div class="match-col" id="matchZh"><h4>汉字 · Слово</h4></div>
+        <div class="match-col" id="matchRu"><h4>Перевод</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="fancy" />
+
+  <section class="task" id="t7">
+    <div class="task-head">
+      <div class="num">08<small>Маршрут</small></div>
+      <div class="ti">
+        <span class="zh-title">练习七 · 指路</span>
+        <h2>Объясни прохожему дорогу (往 / 走 / 拐)</h2>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="grammar-box">
+        <h4>📌 Предлог 往 (wǎng) — по направлению к</h4>
+        <p>Самая важная ошибка русскоговорящих: мы говорим "поверни направо" (глагол + направление). Китайцы говорят "по направлению вправо поверни". Предлог 往 и само направление ставятся <b>ПЕРЕД</b> глаголом движения!</p>
+        <span class="formula">往 + Направление (前/左/右) + Глагол (走/拐/看)</span>
+        <ul>
+          <li><span class="zh-ex">往前走</span> (wǎng qián zǒu) — идти прямо (букв. "в сторону переда идти").</li>
+          <li><span class="zh-ex">往右拐</span> (wǎng yòu guǎi) — повернуть направо.</li>
+          <li>Слово <b>一直 (yìzhí)</b> означает "всё время, постоянно, прямо". Часто используется в связке: <span class="zh-ex">一直往前走</span> (иди всё время прямо).</li>
+        </ul>
+        <hr style="border:none; border-top:1px dashed var(--line); margin:10px 0;">
+        <h4>📌 Последовательность действий с 到 (dào)</h4>
+        <p>Если нужно сказать "Дойди до X, потом поверни", используем глагол <b>到 (дойти до)</b>.</p>
+        <span class="formula">到了 + [Место / Перекрёсток] + 往 [Направление] 拐</span>
+        <p><i>Пример: Дойдя до перекрестка, поверни налево — <span class="zh-ex">到了十字路口，往左拐。</span></i></p>
+      </div>
+      <div id="routeList" style="display:grid; gap:24px"></div>
+    </div>
+  </section>
+
+  <div class="final" id="final" style="display:none">
+    <h2 id="finalNum">0 / 0</h2>
+    <div class="pct" id="finalPct">0%</div>
+    <p style="margin-top:18px; font-family:'Cormorant Garamond'; font-style:italic; color:var(--slate)">
+      Идиома урока: <b class="zh">熟能生巧</b> <i>shú néng shēng qiǎo</i> — «мастерство приходит с практикой».
+    </p>
+  </div>
+
+</div>
+
+<script>
+const totalTasks = { val: 0 };
+const state = { done: new Set(), right: new Set() };
+
+function registerTask(id){ totalTasks.val++; updateProgress(); }
+function markDone(id, isRight){
+  state.done.add(id);
+  if(isRight) state.right.add(id); else state.right.delete(id);
+  updateProgress();
+}
+function updateProgress(){
+  document.getElementById('totalCount').textContent = totalTasks.val;
+  document.getElementById('doneCount').textContent = state.done.size;
+  document.getElementById('rightCount').textContent = state.right.size;
+  const pct = totalTasks.val ? Math.round(state.done.size / totalTasks.val * 100) : 0;
+  document.getElementById('pbar').style.width = pct + '%';
+  if(state.done.size >= totalTasks.val && totalTasks.val > 0){
+    const f = document.getElementById('final'); f.style.display = 'block';
+    document.getElementById('finalNum').textContent = state.right.size + ' / ' + totalTasks.val;
+    const p = Math.round(state.right.size / totalTasks.val * 100);
+    document.getElementById('finalPct').textContent = p + '% правильно';
+  }
+}
+
+function speak(text, slow=false){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN'; u.rate = slow ? 0.6 : 0.9;
+  window.speechSynthesis.speak(u);
+}
+
+// 0. WARMUP (6 items)
+// Пиньинь удален из отображения, чтобы не подсказывал ученику.
+const warmupItems = [
+  { id:'w1', target:'на столе', ans:['桌子','上'], bank:['桌子','里','上','前'] },
+  { id:'w2', target:'в рюкзаке', ans:['书包','里'], bank:['书包','下','里','旁边'] },
+  { id:'w3', target:'за зданием', ans:['楼','后面'], bank:['前面','楼','上','后面'] },
+  { id:'w4', target:'под стулом', ans:['椅子','下面'], bank:['前面','椅子','下面','里'] },
+  { id:'w5', target:'впереди меня', ans:['我','前面'], bank:['上面','前面','我','他'] },
+  { id:'w6', target:'рядом со школой', ans:['学校','旁边'], bank:['学校','医院','旁边','上'] }
+];
+function renderWarmup(){
+  const container = document.getElementById('warmupList');
+  warmupItems.forEach(item => {
+    registerTask(item.id);
+    const div = document.createElement('div');
+    div.className = 'warmup-card';
+    div.innerHTML = `
+      <div style="font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--slate); margin-bottom:12px">«<b>${item.target}</b>»</div>
+      <div>
+        <span class="warmup-slot" data-s="0">?</span> 
+        <span style="font-size:24px; color:var(--line-strong)">+</span> 
+        <span class="warmup-slot" data-s="1">?</span>
+      </div>
+      <div class="warmup-options">
+        ${item.bank.map((w,i)=>`<button class="w-opt" data-w="${w}" data-i="${i}">${w}</button>`).join('')}
+      </div>
+      <div class="feedback" data-fb></div>
+    `;
+    let slots = [null, null];
+    div.querySelectorAll('.w-opt').forEach(btn => {
+      btn.onclick = () => {
+        if(btn.classList.contains('used')) return;
+        const emptyIdx = slots.findIndex(x => x === null);
+        if(emptyIdx === -1) return;
+        slots[emptyIdx] = btn.dataset.w;
+        btn.classList.add('used');
+        const slotEl = div.querySelector(`.warmup-slot[data-s="${emptyIdx}"]`);
+        slotEl.textContent = btn.dataset.w;
+        slotEl.classList.add('filled');
+        
+        if(slots[0] && slots[1]){
+          if(slots[0] === item.ans[0] && slots[1] === item.ans[1]){
+            div.querySelector('[data-fb]').className = 'feedback ok';
+            div.querySelector('[data-fb]').textContent = '✓ Правильно!';
+            markDone(item.id, true);
+          } else {
+            div.querySelector('[data-fb]').className = 'feedback no';
+            div.querySelector('[data-fb]').textContent = 'Неверно. Сначала предмет, потом локатив.';
+            markDone(item.id, false);
+            setTimeout(()=>{ 
+              slots=[null,null]; 
+              div.querySelectorAll('.warmup-slot').forEach(s=>{s.textContent='?'; s.classList.remove('filled');});
+              div.querySelectorAll('.w-opt').forEach(b=>b.classList.remove('used'));
+              div.querySelector('[data-fb]').textContent = '';
+            }, 1500);
+          }
+        }
+      };
+    });
+    container.appendChild(div);
+  });
+}
+
+// 1. EMOJI (8 items)
+const emojiScenes = [
+  { id:'e1', scene:'🍵 / 📚', desc:'чай на книге', subj:'茶', obj:'书', answer:'上', expect:'茶在书上。', expectPy:'Chá zài shū shàng.', expectRu:'Чай — на книге.', options:['上','下','里','旁边'] },
+  { id:'e2', scene:'🐱 / 🛏️', desc:'кошка под кроватью', subj:'猫', obj:'床', answer:'下', expect:'猫在床下。', expectPy:'Māo zài chuáng xià.', expectRu:'Кошка — под кроватью.', options:['上','下','里','后面'] },
+  { id:'e3', scene:'📱 / 🛋️', desc:'телефон рядом с диваном', subj:'手机', obj:'沙发', answer:'旁边', expect:'手机在沙发旁边。', expectPy:'Shǒujī zài shāfā pángbiān.', expectRu:'Телефон — рядом с диваном.', options:['上','旁边','里','前面'] },
+  { id:'e4', scene:'👕 / 🪟', desc:'одежда в шкафу', subj:'衣服', obj:'衣柜', answer:'里', expect:'衣服在衣柜里。', expectPy:'Yīfu zài yīguì lǐ.', expectRu:'Одежда — в шкафу.', options:['上','下','里','旁边'] },
+  { id:'e5', scene:'🐶 / 🏫', desc:'собака перед школой', subj:'狗', obj:'学校', answer:'前面', expect:'狗在学校前面。', expectPy:'Gǒu zài xuéxiào qiánmiàn.', expectRu:'Собака — перед школой.', options:['前面','后面','里','旁边'] },
+  { id:'e6', scene:'🚗 / 🏢', desc:'машина за зданием', subj:'车', obj:'楼', answer:'后面', expect:'车在楼后面。', expectPy:'Chē zài lóu hòumiàn.', expectRu:'Машина — за зданием.', options:['前面','后面','旁边','里'] },
+  { id:'e7', scene:'💻 / 🪑', desc:'компьютер на столе', subj:'电脑', obj:'桌子', answer:'上', expect:'电脑在桌子上。', expectPy:'Diànnǎo zài zhuōzi shàng.', expectRu:'Компьютер — на столе.', options:['上','下','里','旁边'] },
+  { id:'e8', scene:'🍎 / 🥣', desc:'яблоко в миске', subj:'苹果', obj:'碗', answer:'里', expect:'苹果在碗里。', expectPy:'Píngguǒ zài wǎn lǐ.', expectRu:'Яблоко — в миске.', options:['上','下','里','旁边'] }
+];
+function renderEmoji(){
+  const grid = document.getElementById('emojiGrid');
+  emojiScenes.forEach(sc => {
+    registerTask(sc.id);
+    const div = document.createElement('div'); div.className = 'emoji-card'; div.dataset.id = sc.id;
+    div.innerHTML = `
+      <div class="scene">${sc.scene}</div><div class="scene-desc">${sc.desc}</div>
+      <div class="sentence-build"><span class="zh">${sc.subj}</span> 在 <span class="zh">${sc.obj}</span> <span class="slot empty" data-slot>?</span>。</div>
+      <div class="opts">${sc.options.map(o=>`<button class="opt" data-opt="${o}">${o}</button>`).join('')}</div>
+      <div class="feedback" data-fb></div><button class="speak">🔊</button>
+    `;
+    const slot = div.querySelector('[data-slot]'); const fb = div.querySelector('[data-fb]');
+    div.querySelectorAll('.opt').forEach(btn => {
+      btn.onclick = ()=>{
+        if(div.classList.contains('solved')) return;
+        div.querySelectorAll('.opt').forEach(b => b.classList.remove('picked'));
+        btn.classList.add('picked'); slot.textContent = btn.dataset.opt; slot.classList.remove('empty');
+        if(btn.dataset.opt === sc.answer){
+          div.classList.add('solved'); btn.classList.add('correct-hl');
+          fb.className = 'feedback ok'; fb.innerHTML = `✓ <b>${sc.expect}</b><br><span class="py">${sc.expectPy}</span>`; markDone(sc.id, true);
+        } else {
+          div.classList.add('wrong'); btn.classList.add('wrong-hl');
+          fb.className = 'feedback no'; fb.textContent = `Ошибка. Подумай ещё.`; markDone(sc.id, false);
+        }
+      };
+    });
+    div.querySelector('.speak').onclick = ()=> speak(sc.expect);
+    grid.appendChild(div);
+  });
+}
+function resetEmoji(){ document.getElementById('emojiGrid').innerHTML = ''; emojiScenes.forEach(s => { state.done.delete(s.id); state.right.delete(s.id); }); totalTasks.val -= emojiScenes.length; renderEmoji(); updateProgress(); }
+
+// 2. ZAI vs YOU (8 items)
+const zaiyouItems = [
+  { id:'zy1', parts:['我的手机','{}','书包里。'], py:'Wǒ de shǒujī ___ shūbāo lǐ.', answer:'在', translation:'Мой телефон в рюкзаке.' },
+  { id:'zy2', parts:['桌子上','{}','很多书。'], py:'Zhuōzi shàng ___ hěn duō shū.', answer:'有', translation:'На столе много книг.' },
+  { id:'zy3', parts:['妈妈','{}','厨房做饭。'], py:'Māma ___ chúfáng zuò fàn.', answer:'在', translation:'Мама на кухне готовит.' },
+  { id:'zy4', parts:['房间里','{}','一只小猫。'], py:'Fángjiān lǐ ___ yì zhī xiǎo māo.', answer:'有', translation:'В комнате есть котёнок.' },
+  { id:'zy5', parts:['医院的前面','{}','一个药店。'], py:'Yīyuàn de qiánmiàn ___ yí ge yàodiàn.', answer:'有', translation:'Перед больницей есть аптека.' },
+  { id:'zy6', parts:['你的笔','{}','哪儿？'], py:'Nǐ de bǐ ___ nǎr?', answer:'在', translation:'Где твоя ручка?' },
+  { id:'zy7', parts:['床的下面','{}','一个箱子。'], py:'Chuáng de xiàmiàn ___ yí ge xiāngzi.', answer:'有', translation:'Под кроватью есть коробка.' },
+  { id:'zy8', parts:['图书馆','{}','学校的后面。'], py:'Túshūguǎn ___ xuéxiào de hòumiàn.', answer:'在', translation:'Библиотека — за школой.' }
+];
+function renderZaiYou(){
+  const list = document.getElementById('zaiyouList');
+  zaiyouItems.forEach(item => {
+    registerTask(item.id);
+    const div = document.createElement('div'); div.className = 'zaiyou-item';
+    div.innerHTML = `
+      <div class="sent"><span class="zh">${item.parts[0]}</span> <span class="gap" data-gap>?</span> <span class="zh">${item.parts[2]}</span><div class="py">${item.py}</div></div>
+      <div class="zaiyou-btns"><button class="zb" data-pick="在">在</button><button class="zb" data-pick="有">有</button></div>
+      <div class="zaiyou-translation" style="width:100%; margin-top:8px">${item.translation}</div>
+    `;
+    div.querySelectorAll('.zb').forEach(b => {
+      b.onclick = ()=>{
+        if(div.classList.contains('solved')) return;
+        div.querySelectorAll('.zb').forEach(x=>x.classList.remove('picked'));
+        b.classList.add('picked'); div.querySelector('[data-gap]').textContent = b.dataset.pick;
+        if(b.dataset.pick === item.answer){ div.classList.add('solved'); markDone(item.id, true); } 
+        else { div.classList.add('wrong'); markDone(item.id, false); }
+      };
+    });
+    list.appendChild(div);
+  });
+}
+
+// 3. FILL (6 items)
+const fillItems = [
+  { id:'f1', before:'书在书包', after:'。', py:'Shū zài shūbāo ___', answers:['里','里面'], hint:'внутри' },
+  { id:'f2', before:'猫在椅子', after:'。', py:'Māo zài yǐzi ___', answers:['下','下面','下边'], hint:'под' },
+  { id:'f3', before:'桌子', after:'有一台电脑。', py:'Zhuōzi ___ yǒu yì tái diànnǎo.', answers:['上','上面','上边'], hint:'на' },
+  { id:'f4', before:'商店在学校', after:'。', py:'Shāngdiàn zài xuéxiào ___', answers:['旁边','附近','对面'], hint:'рядом / напротив' },
+  { id:'f5', before:'老师站在学生', after:'。', py:'Lǎoshī zhàn zài xuésheng ___', answers:['前面','前边'], hint:'перед' },
+  { id:'f6', before:'食堂在教学楼', after:'。', py:'Shítáng zài jiàoxuélóu ___', answers:['后面','后边'], hint:'позади' }
+];
+function renderFill(){
+  const list = document.getElementById('fillList');
+  fillItems.forEach(item => {
+    registerTask(item.id);
+    const div = document.createElement('div'); div.className = 'fill-item'; div.dataset.id = item.id;
+    div.innerHTML = `
+      <div class="sentence"><span class="zh">${item.before}<span style="display:inline-block; min-width:50px"></span>${item.after}</span><div class="py">${item.py}</div></div>
+      <div style="font-family:'Inter',sans-serif; font-size:12px; color:var(--slate-2); margin-bottom:8px">Подсказка: ${item.hint}</div>
+      <input type="text" placeholder="локатив..." autocomplete="off" />
+    `;
+    list.appendChild(div);
+  });
+}
+function checkFill(){
+  document.querySelectorAll('.fill-item').forEach(div => {
+    const id = div.dataset.id; const item = fillItems.find(f => f.id === id); const val = div.querySelector('input').value.trim();
+    if(!val) return;
+    if(item.answers.includes(val)){ div.classList.add('ok'); div.classList.remove('no'); markDone(id, true); } 
+    else { div.classList.add('no'); div.classList.remove('ok'); markDone(id, false); }
+  });
+}
+
+// 4. T/F READING (5 items)
+const tfItems = [
+  { id:'tf1', q:'门旁边有一张床。', py:'Mén pángbiān yǒu yì zhāng chuáng.', ans:false, ru:'Рядом с дверью стоит кровать.' },
+  { id:'tf2', q:'衣柜里有很多衣服。', py:'Yīguì lǐ yǒu hěn duō yīfu.', ans:true, ru:'В шкафу много одежды.' },
+  { id:'tf3', q:'电脑在书桌上。', py:'Diànnǎo zài shūzhuō shàng.', ans:true, ru:'Компьютер на столе.' },
+  { id:'tf4', q:'小狗在床上睡觉。', py:'Xiǎo gǒu zài chuáng shàng shuìjiào.', ans:false, ru:'Собачка спит на кровати.' },
+  { id:'tf5', q:'房间里没有桌子。', py:'Fángjiān lǐ méiyǒu zhuōzi.', ans:false, ru:'В комнате нет стола.' }
+];
+function renderTF(){
+  const grid = document.getElementById('tfGrid');
+  tfItems.forEach(item => {
+    registerTask(item.id);
+    const div = document.createElement('div'); div.className = 'tf-card';
+    div.innerHTML = `
+      <div class="q">
+        <div class="zh">${item.q}</div><div class="py">${item.py}</div>
+        <div style="font-size:14px; color:var(--slate); margin-top:4px; font-family:'Cormorant Garamond',serif; font-style:italic">${item.ru}</div>
+      </div>
+      <div class="tf-actions">
+        <button class="tf-btn" data-v="true">对 (Верно)</button>
+        <button class="tf-btn" data-v="false">错 (Неверно)</button>
+      </div>
+    `;
+    div.querySelectorAll('.tf-btn').forEach(btn => {
+      btn.onclick = () => {
+        if(div.classList.contains('solved')) return;
+        const val = btn.dataset.v === 'true';
+        div.querySelectorAll('.tf-btn').forEach(b => b.className = 'tf-btn');
+        btn.classList.add(val ? 'picked-true' : 'picked-false');
+        if(val === item.ans){
+          div.classList.add('solved'); markDone(item.id, true);
+        } else {
+          markDone(item.id, false);
+        }
+      }
+    });
+    grid.appendChild(div);
+  });
+}
+
+// 5. TRANSFORM - ПЕРЕДЕЛАНО В MULTIPLE CHOICE (5 items)
+const transformItems = [
+  { id:'tr1', from:'桌子上有一台电脑。', py:'Zhuōzi shàng yǒu yì tái diànnǎo.', dir:'有 → 在', opts:[{t:'电脑在桌子上。',c:true},{t:'在桌子上有电脑。',c:false},{t:'电脑有在桌子上。',c:false}] },
+  { id:'tr2', from:'衣柜里有很多衣服。', py:'Yīguì lǐ yǒu hěn duō yīfu.', dir:'有 → 在', opts:[{t:'很多衣服在衣柜里。',c:true},{t:'衣柜在衣服里。',c:false},{t:'衣服有在衣柜里。',c:false}] },
+  { id:'tr3', from:'手机在床上。', py:'Shǒujī zài chuáng shàng.', dir:'在 → 有', opts:[{t:'有手机在床上。',c:false},{t:'床上有一个手机。',c:true},{t:'手机有在床上。',c:false}] },
+  { id:'tr4', from:'老师在教室里。', py:'Lǎoshī zài jiàoshì lǐ.', dir:'在 → 有', opts:[{t:'老师有教室里。',c:false},{t:'有老师在教室里。',c:false},{t:'教室里有老师。',c:true}] },
+  { id:'tr5', from:'学校前面有一家超市。', py:'Xuéxiào qiánmiàn yǒu yì jiā chāoshì.', dir:'有 → 在', opts:[{t:'学校在超市前面。',c:false},{t:'超市在学校前面。',c:true},{t:'在学校前面超市。',c:false}] }
+];
+
+function renderTransform(){
+  const list = document.getElementById('transformList');
+  transformItems.forEach(item => {
+    registerTask(item.id);
+    const div = document.createElement('div'); div.className = 'tr-item'; div.dataset.id = item.id;
+    div.innerHTML = `
+      <div class="tr-prompt"><span class="zh">${item.from}</span> <span class="arrow">${item.dir}</span></div>
+      <div class="py" style="margin-bottom:10px">${item.py}</div>
+      <div class="tr-opts">
+        ${item.opts.map((o,i)=>`<button class="tr-opt" data-idx="${i}">${o.t}</button>`).join('')}
+      </div>
+      <div class="feedback" data-fb style="margin-top:10px"></div>
+    `;
+    const fb = div.querySelector('[data-fb]');
+    div.querySelectorAll('.tr-opt').forEach(btn => {
+      btn.onclick = () => {
+        if(div.classList.contains('solved')) return;
+        // очищаем предыдущий выбор
+        div.querySelectorAll('.tr-opt').forEach(b => b.classList.remove('correct-hl','wrong-hl'));
+        const opt = item.opts[btn.dataset.idx];
+        if(opt.c){
+          btn.classList.add('correct-hl');
+          div.classList.add('solved');
+          fb.className = 'feedback ok'; fb.textContent = '✓ Верно!';
+          markDone(item.id, true);
+        } else {
+          btn.classList.add('wrong-hl');
+          fb.className = 'feedback no'; fb.textContent = 'Ошибка. Проверь порядок слов.';
+          markDone(item.id, false);
+        }
+      }
+    });
+    list.appendChild(div);
+  });
+}
+
+// 6. DISTANCE (6 items)
+const liItems = [
+  { id:'li1', prompt:'Мой дом близко к школе.', tmpl:['我家','{}','学校','{}','近。'], py:'Wǒ jiā ___ xuéxiào ___ jìn.', slots:[{c:'离',b:['离','从','在']},{c:'很',b:['很','离','是']}], full:'我家离学校很近。' },
+  { id:'li2', prompt:'От моего дома до школы — 300 метров.', tmpl:['我家','{}','学校','{}','三百米。'], py:'Wǒ jiā ___ xuéxiào ___ sānbǎi mǐ.', slots:[{c:'离',b:['离','从','到']},{c:'有',b:['有','是','在']}], full:'我家离学校有三百米。' },
+  { id:'li3', prompt:'Метро примерно в 500 метрах отсюда.', tmpl:['地铁站','{}','这儿','{}','五百米。'], py:'Dìtiězhàn ___ zhè\'er ___ wǔbǎi mǐ.', slots:[{c:'离',b:['离','从','在']},{c:'大概',b:['大概','大','一直']}], full:'地铁站离这儿大概五百米。' },
+  { id:'li4', prompt:'Далеко ли отсюда до аэропорта?', tmpl:['机场','{}','这儿','{}','不远？'], py:'Jīchǎng ___ zhè\'er ___ bù yuǎn?', slots:[{c:'离',b:['离','在','到']},{c:'远',b:['远','近','很']}], full:'机场离这儿远不远？' },
+  { id:'li5', prompt:'Как далеко от Пекина до Шанхая?', tmpl:['北京','{}','上海有多','{}','？'], py:'Běijīng ___ Shànghǎi yǒu duō ___?', slots:[{c:'离',b:['离','在','往']},{c:'远',b:['远','长','大']}], full:'北京离上海有多远？' },
+  { id:'li6', prompt:'Почта совсем не далеко.', tmpl:['邮局','{}','这儿一点儿也','{}','远。'], py:'Yóujú ___ zhè\'er yìdiǎnr yě ___ yuǎn.', slots:[{c:'离',b:['离','在','从']},{c:'不',b:['不','没','很']}], full:'邮局离这儿一点儿也不远。' }
+];
+function renderLi(){
+  const list = document.getElementById('liGrid');
+  liItems.forEach(item => {
+    registerTask(item.id);
+    const div = document.createElement('div'); div.className = 'li-card';
+    let sentHTML = ''; let slotIdx = 0;
+    item.tmpl.forEach(p => {
+      if(p === '{}'){ sentHTML += `<span class="blank" data-blank="${slotIdx}" data-correct="${item.slots[slotIdx].c}">_____</span>`; slotIdx++; } 
+      else { sentHTML += `<span class="zh">${p}</span>`; }
+    });
+    const pool = []; item.slots.forEach(s => s.b.forEach(w => { if(!pool.includes(w)) pool.push(w); }));
+    div.innerHTML = `
+      <div class="li-prompt">${item.prompt}</div><div class="li-sentence">${sentHTML}</div><div class="py">${item.py}</div>
+      <div class="li-bank">${pool.map(w=>`<span class="chip" data-w="${w}">${w}</span>`).join('')}</div>
+    `;
+    let solved = 0; let wrong = false;
+    div.querySelectorAll('.chip').forEach(chip => {
+      chip.onclick = ()=>{
+        if(chip.classList.contains('used')) return;
+        const blank = div.querySelector('.blank:not(.filled)'); if(!blank) return;
+        const w = chip.dataset.w; blank.textContent = w; blank.classList.add('filled'); chip.classList.add('used');
+        if(w !== blank.dataset.correct){ wrong = true; blank.style.color = 'var(--red)'; }
+        solved++;
+        if(solved === item.slots.length){
+          if(!wrong){ div.classList.add('solved'); markDone(item.id, true); } 
+          else { markDone(item.id, false); }
+        }
+      };
+    });
+    list.appendChild(div);
+  });
+}
+
+// 7. MATCHING (8 items)
+const matchPairs = [
+  { zh:'图书馆', ru:'библиотека' }, { zh:'食堂', ru:'столовая' }, { zh:'教学楼', ru:'учебный корпус' }, 
+  { zh:'宿舍', ru:'общежитие' }, { zh:'十字路口', ru:'перекрёсток' }, { zh:'红绿灯', ru:'светофор' },
+  { zh:'拐', ru:'поворачивать' }, { zh:'对面', ru:'напротив' }
+];
+function renderMatch(){
+  registerTask('match');
+  const colZh = document.getElementById('matchZh'); const colRu = document.getElementById('matchRu');
+  const zhs = [...matchPairs].sort(()=>Math.random()-0.5); const rus = [...matchPairs].sort(()=>Math.random()-0.5);
+  zhs.forEach(p => colZh.innerHTML += `<div class="m-card zh" data-key="${p.zh}">${p.zh}</div>`);
+  rus.forEach(p => colRu.innerHTML += `<div class="m-card ru" data-key="${p.zh}">${p.ru}</div>`);
+  let selZh = null; let solved = 0;
+  colZh.querySelectorAll('.m-card').forEach(c=>{ c.onclick = ()=>{ if(c.classList.contains('matched')) return; colZh.querySelectorAll('.m-card').forEach(x=>x.classList.remove('selected')); c.classList.add('selected'); selZh = c; }; });
+  colRu.querySelectorAll('.m-card').forEach(c=>{
+    c.onclick = ()=>{
+      if(!selZh || c.classList.contains('matched')) return;
+      if(c.dataset.key === selZh.dataset.key){
+        c.classList.add('matched'); selZh.classList.add('matched'); selZh.classList.remove('selected'); selZh = null;
+        solved++; if(solved === matchPairs.length) markDone('match', true);
+      } else { c.classList.add('shake'); selZh.classList.add('shake'); setTimeout(()=>{c.classList.remove('shake'); selZh && selZh.classList.remove('shake','selected'); selZh=null;}, 350); }
+    };
+  });
+}
+
+// 8. ROUTE (6 items)
+const routes = [
+  { id:'rt1', task:'«Идите прямо».', py:'Yìzhí wǎng qián zǒu.', bank:['一直','往','前','走','右','左','到'], acc:['一直往前走','往前一直走','往前走'] },
+  { id:'rt2', task:'«На перекрёстке поверните налево».', py:'Dào lùkǒu wǎng zuǒ guǎi.', bank:['到','路口','往','左','拐','右','前'], acc:['到了路口往左拐','到路口往左拐'] },
+  { id:'rt3', task:'«Иди вперёд 100 метров, потом сверни направо».', py:'Wǎng qián zǒu yìbǎi mǐ zài wǎng yòu guǎi.', bank:['往','前','走','一百米','再','往','右','拐','到'], acc:['往前走一百米再往右拐'] },
+  { id:'rt4', task:'«Посмотри направо» (Подсказка: используйте 看).', py:'Wǎng yòu kàn.', bank:['往','右','看','左','前','走'], acc:['往右看'] },
+  { id:'rt5', task:'«Идите прямо, дойдя до светофора поверните направо».', py:'Yìzhí wǎng qián zǒu, dào hónglǜdēng wǎng yòu guǎi.', bank:['一直','往','前','走','到','红绿灯','往','右','拐'], acc:['一直往前走到红绿灯往右拐','一直往前走到了红绿灯往右拐','往前一直走到红绿灯往右拐'] },
+  { id:'rt6', task:'«От метро 5 минут ходьбы — и пришли».', py:'Cóng dìtiězhàn zǒu wǔ fēnzhōng jiù dào.', bank:['从','地铁站','走','五分钟','就','到','离','骑'], acc:['从地铁站走五分钟就到'] }
+];
+function renderRoutes(){
+  const list = document.getElementById('routeList');
+  routes.forEach(r => {
+    registerTask(r.id);
+    const div = document.createElement('div'); div.className = 'route-scene';
+    div.innerHTML = `
+      <div style="font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--slate)">${r.task}</div><div class="py">${r.py}</div>
+      <div class="route-build" data-build><span style="color:var(--slate-2); font-size:15px">кликни по словам ниже…</span></div>
+      <div class="route-bank">${r.bank.map((w,i)=>`<span class="word" data-w="${w}" data-i="${i}">${w}</span>`).join('')}</div>
+      <div style="display:flex; gap:10px; align-items:center"><button class="btn btn-small" data-check>Проверить</button><button class="btn btn-ghost btn-small" data-clear>Очистить</button><div class="feedback" data-fb></div></div>
+    `;
+    let chosen = [];
+    const build = div.querySelector('[data-build]');
+    const refresh = ()=>{ build.innerHTML = chosen.length ? chosen.map((c,idx)=>`<span class="word-in-build word" data-idx="${idx}">${c.w}</span>`).join('') : `<span style="color:var(--slate-2); font-size:15px">кликни по словам ниже…</span>`; 
+      build.querySelectorAll('.word-in-build').forEach(sp => sp.onclick = ()=>{ const i=sp.dataset.idx; div.querySelectorAll(`.route-bank .word[data-i="${chosen[i].i}"]`)[0].classList.remove('used'); chosen.splice(i,1); refresh(); });
+    };
+    div.querySelectorAll('.route-bank .word').forEach(w => w.onclick = ()=>{ if(w.classList.contains('used')) return; chosen.push({ w: w.dataset.w, i: w.dataset.i }); w.classList.add('used'); refresh(); });
+    div.querySelector('[data-check]').onclick = ()=>{
+      const ans = chosen.map(c=>c.w).join('');
+      if(r.acc.includes(ans)){ div.querySelector('[data-fb]').className='feedback ok'; div.querySelector('[data-fb]').textContent='✓ Отлично!'; markDone(r.id, true); } 
+      else { div.querySelector('[data-fb]').className='feedback no'; div.querySelector('[data-fb]').textContent='Ошибка. Проверьте порядок 往 + направление + глагол.'; markDone(r.id, false); }
+    };
+    div.querySelector('[data-clear]').onclick = ()=>{ chosen=[]; div.querySelectorAll('.route-bank .word').forEach(w=>w.classList.remove('used')); refresh(); div.querySelector('[data-fb]').textContent=''; };
+    list.appendChild(div);
+  });
+}
+
+// INIT
+renderWarmup();
+renderEmoji();
+renderZaiYou();
+renderFill();
+renderTF();
+renderTransform();
+renderLi();
+renderMatch();
+renderRoutes();
+updateProgress();
+</script>
+</body>
+</html>
